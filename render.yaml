@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: jewellery-store
+    env: docker
+    plan: free
+    repo: https://github.com/darshans0414/jewellery-store
+    branch: main
+    dockerfilePath: Dockerfile
+    rootDir: ./
