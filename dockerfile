@@ -1,22 +1,23 @@
-FROM php:8.1-apache
+FROM php:8.0
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
+# आवश्यक पॅकेजेस इंस्टॉल करा
+RUN apt-get update -y && apt-get install -y \
+    unzip \
+    git \
+    curl
 
-# Install unzip and git (required for composer dependencies)
-RUN apt-get update && apt-get install -y unzip git zip
+# Composer इंस्टॉल करा
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Set working directory
+# वर्किंग डायरेक्टरी सेट करा
 WORKDIR /var/www/html
 
-# Copy files
+# प्रोजेक्ट फाइल्स कॉपी करा
 COPY . .
 
-# Install dependencies
+# PHP डिपेंडन्सी इंस्टॉल करा
 RUN composer install
 
-# Expose port
+# पोर्ट एक्सपोज करा आणि सर्व्हर सुरू करा
 EXPOSE 80
+CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
